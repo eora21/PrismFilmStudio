@@ -1,0 +1,15 @@
+body {
+  color: #fff;
+  background: #171F30;
+}
+
+.sidebar {
+  border: 4px dashed #bcbcbc;
+}
+
+.profile {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+
