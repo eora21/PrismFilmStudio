@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.fields import related
+from django.db.models.fields import CharField, related
 
 # Create your models here.
 class Movie(models.Model):
@@ -53,3 +53,7 @@ class ReviewComment(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="comments")
     content = models.CharField(max_length=50)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+class UserColorRecord(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    color = models.CharField(max_length=50)

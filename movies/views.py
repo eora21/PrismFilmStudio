@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Movie, Color, Review
+from .models import Movie, Color, Review, UserColorRecord
 from .forms import ReviewCommentForm, ReviewForm, MovieCommentForm
 # Create your views here.
 
@@ -8,17 +8,41 @@ def choice(request):
 
 def index(request):
     movies = Movie.objects.all()
+    
+    # Color List
+    colors = request.user.usercolorrecord_set.all()
+
+    # Picked Color
+    last_color = colors[len(colors)-1]
+    
+    # Color Sort(Recently)
+    colors = reversed(colors)
+        
     context = {
         'movies': movies,
+        'last_color': last_color,
+        'colors': colors,
     }
     return render(request, 'movies/index.html', context)
 
 def detail(request, movie_pk):
     movie = Movie.objects.get(id = movie_pk)
     color = movie.color_set.all()
+    
+    # Color List
+    colors = request.user.usercolorrecord_set.all()
+
+    # Picked Color
+    last_color = colors[len(colors)-1]
+    
+    # Color Sort(Recently)
+    colors = reversed(colors)
+    
     context = {
         'movie': movie,
         'color': color,
+        'colors': colors,
+        'last_color': last_color,
     }
     return render(request,'movies/detail.html', context)
 
@@ -61,3 +85,15 @@ def review(request, review_pk):
 
 def review_comment(request, review_pk):
     pass
+
+def usercolor_create(request):
+    colors = request.user.usercolorrecord_set.all()
+    
+    # Color Max 5 maintain
+    if len(colors) >= 5:
+        colors[0].delete()
+    
+    # Color Push
+    UserColorRecord.objects.create(user=request.user, color=request.POST['color'])
+    
+    return redirect('movies:index')
