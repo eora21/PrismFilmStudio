@@ -60,6 +60,16 @@ def movie_comment(request, movie_pk):
 
 def review_create(request, movie_pk):
     movie = Movie.objects.get(pk = movie_pk)
+    
+    # Color List
+    colors = request.user.usercolorrecord_set.all()
+
+    # Picked Color
+    last_color = colors[len(colors)-1]
+    
+    # Color Sort(Recently)
+    colors = reversed(colors)
+    
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -71,20 +81,46 @@ def review_create(request, movie_pk):
     else:
         form = ReviewForm()
     context = {
-        'form': form
+        'movie': movie,
+        'form': form,
+        'last_color': last_color,
+        'colors': colors,
     }
     return render(request, 'movies/review_create.html', context)
 
 def review(request, review_pk):
     review = Review.objects.get(pk=review_pk)
+    
+    # Color List
+    colors = request.user.usercolorrecord_set.all()
+
+    # Picked Color
+    last_color = colors[len(colors)-1]
+    
+    # Color Sort(Recently)
+    colors = reversed(colors)
+    
     context = {
         'review': review,
+        'last_color': last_color,
+        'colors': colors,
     }
     return render(request,'movies/review.html', context)
     
 
 def review_comment(request, review_pk):
-    pass
+    review = Review.objects.get(pk = review_pk)
+    if request.method == "POST":
+        form = ReviewCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.review = review
+            comment.save()
+            return redirect('movies:review', review_pk)
+            
+    return redirect('movies:review', review_pk)
+        
 
 def usercolor_create(request):
     colors = request.user.usercolorrecord_set.all()

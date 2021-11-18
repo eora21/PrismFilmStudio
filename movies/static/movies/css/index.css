@@ -19,7 +19,7 @@
 
 body {
   font-family: var(--body-font);
-  background-image: url(movies/static/movies/images/backimg.png);
+  background-image: url('/movies/static/movies/images/backimg.png');
   background-size: cover;
   background-position: center;
   display: flex;

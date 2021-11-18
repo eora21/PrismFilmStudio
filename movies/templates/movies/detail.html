@@ -4,11 +4,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Glassmorphism Creative Cloud App Redesign</title>
+  <title>인공지능을 활용한 색체 기반 영화 추천</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <link rel="stylesheet" href="{% static 'movies/css/detail.css/' %}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="./style.css">
+  
 
 </head>
 
@@ -23,7 +25,7 @@
   <div class="app">
     <div class="header">
       <div class="header-menu">
-        <a class="menu-link is-active" href="#">인공지능을 활용한 색채 기반 영화 추천</a>
+        <a class="menu-link " href="#" style="font-size: 20px; color: white; font-weight: bolder;">인공지능을 활용한 색채기반 영화추천</a>
       </div>
       <div class="search-bar">
         <input type="text" placeholder="Search">
@@ -146,80 +148,102 @@
               <h2> 한줄평 </h2>
               <hr>
               {% comment %} Comment Create {% endcomment %}
-                <div>
-                <form action="{% url 'movies:movie_comment' movie.pk %}" method="POST" name="myform" id="myform" class="d-flex">
+              <div>
+                <form action="{% url 'movies:movie_comment' movie.pk %}" method="POST" name="myform" id="myform"
+                  class="d-flex">
                   {% csrf_token %}
-                  <fieldset>
-                    <input type="radio" name="grade" value="5" id="rate1"><label for="rate1">⭐</label>
-                    <input type="radio" name="grade" value="4" id="rate2"><label for="rate2">⭐</label>
-                    <input type="radio" name="grade" value="3" id="rate3"><label for="rate3">⭐</label>
-                    <input type="radio" name="grade" value="2" id="rate4"><label for="rate4">⭐</label>
-                    <input type="radio" name="grade" value="1" id="rate5"><label for="rate5">⭐</label>
-                  </fieldset>
-                  <input type="text" name="content">
-                  <button> 등록</button>
-                </form>
-                </div>
-                <div class="app-card__subtext">
-                  {% comment %} Comment View {% endcomment %}
-                  {% for comment in movie.comments.all %}
-                    <div id="div{{ comment.id }}" onload="loadFunc()">
-                    {% comment %} StarsNum {% endcomment %}
-                    {% if comment.grade == 1 %}
-                      <p>⭐</p>
-                    {% elif comment.grade == 2%}
-                    <p>⭐⭐</p>
-                    {% elif comment.grade == 3%}
-                    <p>⭐⭐⭐</p>
-                    {% elif comment.grade == 4%}
-                    <p>⭐⭐⭐⭐</p>
-                    {% else %}
-                    <p>⭐⭐⭐⭐⭐</p>
-                    {% endif %}
-                      
-                      {{ comment.content }}
-                      - {{ comment.user}}
+                
+                  {% comment %} Stars {% endcomment %}
+                  <div id="full-stars-example-two">
+                    <div class="rating-group">
+                        <input disabled checked class="rating__input rating__input--none" name="grade" id="rating3-none" value="0" type="radio">
+                        <label aria-label="1 star" class="rating__label" for="rating3-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                        <input class="rating__input" name="grade" id="grade-1" value="1" type="radio">
+                        <label aria-label="2 stars" class="rating__label" for="grade-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                        <input class="rating__input" name="grade" id="grade-2" value="2" type="radio">
+                        <label aria-label="3 stars" class="rating__label" for="grade-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                        <input class="rating__input" name="grade" id="grade-3" value="3" type="radio">
+                        <label aria-label="4 stars" class="rating__label" for="grade-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                        <input class="rating__input" name="grade" id="grade-4" value="4" type="radio">
+                        <label aria-label="5 stars" class="rating__label" for="grade-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                        <input class="rating__input" name="grade" id="grade-5" value="5" type="radio">
                     </div>
-                    <hr>
-                  {% endfor %}
-                </div>
-          </div>
-
-          {% comment %} Review List {% endcomment %}
-          <div class="content-section mt-3">
-            <div class="app-card">
-              <span>
-                <div class="row">
-                  {% comment %} Title {% endcomment %}
-                  <div class="col-3">
-                    <img src="{{ movie.poster_url }} " alt="" class="w-100">
                   </div>
-              </span>
-              {% comment %} Contents {% endcomment %}
-              <div class="col-9">
-                <h1> {{ movie.title }} </h1>
+                  {% comment %} Comment Input {% endcomment %}
+                  <hr>
+                  <hr>
+                  <input type="text" name="content" style="background: none; margin-left: 20px; width: 400px; color:white;">
+                  <button class="btn btn-warning" style="font-weight: 500px; font-size: 20px; margin-left: 5px; width:100px;"> 등록</button>
+                  <hr>
+                  <hr>
+                </form>
+              </div>
+              <div class="app-card__subtext">
+                {% comment %} Comment View {% endcomment %}
+                {% for comment in movie.comments.all %}
+                <div id="div{{ comment.id }}" onload="loadFunc()">
+                  {% comment %} StarsNum {% endcomment %}
+                  {% if comment.grade == 1 %}
+                  <p><i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; padding: 0 0.1em; font-size: 2rem;"></i></p>
+                  {% elif comment.grade == 2%}
+                  <p><i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i></p>
+                  {% elif comment.grade == 3%}
+                  <p>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i></p>
+                  {% elif comment.grade == 4%}
+                  <p>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i></p>
+                  {% else %}
+                  <p><i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i>
+                  <i class="rating__icon rating__icon--star fa fa-star" style="color:orange; cursor: pointer; font-size: 2rem;"></i></p>
+                  {% endif %}
 
-                <div class="app-card__subtext">
-                  {{ movie.overview }}
+                  <h5 style="display:inline;">{{ comment.content }} </h5>- {{ comment.user}}
                 </div>
-                <div class="app-card__subtext">
-                  <h4>개봉일 : {{ movie.release_date }}</h4>
-                </div>
-                <div class="app-card__subtext">
-                  <h4>평점 : {{ movie.naver_grade }}점</h4>
-                </div>
+                <hr>
+                {% endfor %}
               </div>
             </div>
-          </div>
 
+            <div class="content-section mt-3">
+              <div class="app-card">
+                {% comment %} Review {% endcomment %}
+                <h2> 리뷰 </h2>
+                {% comment %} Review Create {% endcomment %}
+                <h4 style="text-align: right;"> <a href="{% url 'movies:review_create' movie.pk %}"> <button class="btn btn-warning" style="font-weight: 500px; font-size: 20px; margin-left: 5px; width:100px;"> 리뷰쓰기 </button></a></h4>
+                {% comment %} Review List {% endcomment %}
+                {% for review in movie.reviews.all %}
+
+                <div OnClick="location.href ='{% url 'movies:review' review.pk %}'" style="cursor:pointer;">
+                  <div class="app-card__subtext">
+                    <h5><{{ review.title }}> </h5>
+                    <p>{{ review.content }}</p>
+                    <p style="text-align: right;">{{ review.user }}</p>
+                  </div>
+                </div>
+                <hr>
+                {% endfor %}
+
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
   <div class="overlay-app"></div>
   </div>
-  
+
 </body>
 
 </html>

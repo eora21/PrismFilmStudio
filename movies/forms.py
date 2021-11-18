@@ -15,4 +15,4 @@ class ReviewForm(ModelForm):
 class ReviewCommentForm(ModelForm):
     class Meta:
         model = ReviewComment
-        fields = '__all__'
+        fields = ('content',)
