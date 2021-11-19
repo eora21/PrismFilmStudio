@@ -42,9 +42,15 @@
           <a class="menu-link " href="{% url 'movies:index' 1 %}"
             style="font-size: 20px; color: white; font-weight: bolder;">인공지능을 활용한 색채 기반 영화 추천</a>
         </div>
+
+        {% comment %} Search Bar {% endcomment %}
+        <form action="{% url 'movies:index' 4 %}">
         <div class="search-bar">
-          <input type="text" placeholder="Search">
+          <input id="searchInput" name="searchData" type="text" placeholder="Search">
+          <button id="searchButton" class="d-none"></button>
         </div>
+        </form>
+
         <div class="header-profile">
           <div class="notification d-flex">
             <h3 style="color:white;">{{ user.username }} <button class="btn btn-white"
@@ -191,5 +197,16 @@
     <div class="overlay-app"></div>
     </div>
 
+  <!-- Search Event -->
+  <script>
+  const searchInput = document.querySelector('#searchInput')
+  const searchButton = document.querySelector('#searchButton')
+
+  searchInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      searchButton.click()
+    }
+  })
+  </script>
   </body>
 </html>

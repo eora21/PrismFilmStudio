@@ -34,6 +34,21 @@ def index(request, mode):                                          # mode : Sort
             score = movie.release_date
             res_movies.append([movie, score])
     
+    # Order by Search
+    elif mode == 4:
+        datas = request.GET['searchData'].split()                      # Input Data list
+        for movie in movies:                                           # query in title : +10, query in overview +1
+            temp_cnt = 0
+            title = movie.title
+            overview = movie.overview
+            for data in datas:
+                if data in title:
+                    temp_cnt += 10
+                elif data in overview:
+                    temp_cnt += 1
+            if temp_cnt >= 1:                                          # If query in title, content, Can be Searched
+                res_movies.append([movie,temp_cnt])
+
     # Order by Coloring
     else:
         last_color_rgb = last_color.color[4:-1].split(", ")            # users R, G, B list
