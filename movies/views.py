@@ -12,7 +12,7 @@ def choice(request):
 
 @login_required
 # @require_safe
-def index(request, mode):                                          # mode : Sorted by 2 - TMDB_Grade / 3 - Release Date / 1, 4~ - Coloring
+def index(request, mode):                                          # mode : Sorted by 2 - TMDB_Grade / 3 - Release Date / 4 - Search Data / 1, 4~ - Coloring
     movies = Movie.objects.all()
     
     # Profile Color Create
@@ -44,14 +44,14 @@ def index(request, mode):                                          # mode : Sort
             for data in datas:
                 if data in title:
                     temp_cnt += 10
-                elif data in overview:
+                if data in overview:
                     temp_cnt += 1
             if temp_cnt >= 1:                                          # If query in title, content, Can be Searched
                 res_movies.append([movie,temp_cnt])
 
     # Order by Coloring
     else:
-        last_color_rgb = last_color.color[4:-1].split(", ")            # users R, G, B list
+        last_color_rgb = last_color.color[4:-1].split(", ")            # Users R, G, B list
 
         for movie in movies:
             movie_color = movie.color_set.all()[0]
@@ -80,13 +80,18 @@ def index(request, mode):                                          # mode : Sort
                     math.pow(int(last_color_rgb[1]) - int(movie_color.color_5_G), 2) +\
                     math.pow(int(last_color_rgb[2]) - int(movie_color.color_5_B), 2)
                 )
-            res_movies.append([movie, int(score)])    
-    res_movies.sort(key= lambda x: x[1], reverse=True)
+            res_movies.append([movie, int(score)])
+    
+    if mode == 2 or mode == 3 or mode == 4:
+        res_movies.sort(key= lambda x: x[1], reverse=True)
+    else:
+        res_movies.sort(key= lambda x: x[1])
     
     context = {
         'movies': res_movies,
         'last_color': last_color,
         'colors': colors,
+        'mode': mode,
     }
     return render(request, 'movies/index.html', context)
 
@@ -191,4 +196,4 @@ def usercolor_create(request):
     if len(colors) >= 5:                                                            # Maintain Color Up to 5
         colors[0].delete()
     UserColorRecord.objects.create(user=request.user, color=request.POST['color'])  # Color Push
-    return redirect('movies:index')
+    return redirect('movies:index', 1)

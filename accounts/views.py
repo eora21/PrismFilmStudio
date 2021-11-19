@@ -8,7 +8,7 @@ from django.views.decorators.http import require_http_methods
 @require_http_methods(['GET','POST'])
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('movies:index')
+        return redirect('movies:index', 1)
     
     if request.method == "POST":
         form = CustomUserCreationFrom(request.POST)
@@ -25,7 +25,7 @@ def signup(request):
 @require_http_methods(['GET','POST'])
 def login(request):
     if request.user.is_authenticated:
-        return redirect('movies:index')
+        return redirect('movies:index', 1)
     
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)

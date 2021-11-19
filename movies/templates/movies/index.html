@@ -11,23 +11,86 @@
     <div class="content-section mt-3">
       <div class="app-card">
         <span>
-          <svg viewBox="0 0 52 52" style="border: 1px solid #C75DEB">
-            <g xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M40.824 52H11.176C5.003 52 0 46.997 0 40.824V11.176C0 5.003 5.003 0 11.176 0h29.649C46.997 0 52 5.003 52 11.176v29.649C52 46.997 46.997 52 40.824 52z"
-                fill="#3a3375" data-original="#3a3375" />
-              <path
-                d="M27.44 39H24.2l-2.76-9.04h-8.32L10.48 39H7.36l8.24-28h3.32l8.52 28zm-6.72-12l-3.48-11.36L13.88 27h6.84zM31.48 33.48c0 2.267 1.333 3.399 4 3.399 1.653 0 3.466-.546 5.44-1.64L42 37.6c-2.054 1.254-4.2 1.881-6.44 1.881-4.64 0-6.96-1.946-6.96-5.841v-8.2c0-2.16.673-3.841 2.02-5.04 1.346-1.2 3.126-1.801 5.34-1.801s3.94.594 5.18 1.78c1.24 1.187 1.86 2.834 1.86 4.94V30.8l-11.52.6v2.08zm8.6-5.24v-3.08c0-1.413-.44-2.42-1.32-3.021-.88-.6-1.907-.899-3.08-.899-1.174 0-2.167.359-2.98 1.08-.814.72-1.22 1.773-1.22 3.16v3.199l8.6-.439z"
-                fill="#e4d1eb" data-original="#e7adfb" />
-            </g>
-          </svg>
-          {{ movie.title }}
+          <div class="row">
+          {% comment %} Left Side {% endcomment %}
+            <div class="col-6">
+              <div class="row">
+                {% comment %} Movie Info {% endcomment %}
+                <img src="{{ movie.poster_url }}" alt="" class="col-6" style="border-radius: 10%">
+                <div class="col-6" style="height:400px;">
+                  <h3>{{ movie.title }}</h3>
+                  <div style="height: 180px;">
+                  {{ movie.overview|truncatechars:150 }}
+                  </div>
+                  {% comment %} Score Center {% endcomment %}
+                  <div class="h-50">
+
+                  {% if mode == 2 %}
+                   <h4 class="mt-3">평점평균 :</h4>
+                   <div class="d-flex align-items-center justify-content-center h-75">
+                   <h1 class="mb-5" style="font-size: 80px;">{{ score }}</h1>
+                   </div>
+                  </div>
+
+                  {% elif mode == 3 %}
+                    <h4 class="mt-3">개봉일 :</h4>
+                    <div class="d-flex align-items-center justify-content-center h-75">
+                    <h1 class="mb-5" style="font-size: 50px;">{{ score }}</h1>
+                    </div>
+                  </div>
+
+                  {% elif mode == 4 %}
+                    <h4 class="mt-3">일치점수 :</h4>
+                    <div class="d-flex align-items-center justify-content-center h-75">
+                    <h1 class="mb-5" style="font-size: 80px;">{{ score }}</h1>
+                    </div>
+                  </div>
+
+                  {% else %}
+                  <h4 class="mt-3">AI Z스코어 :</h4>
+                   <div class="d-flex align-items-center justify-content-center h-75">
+                   <h1 class="mb-5" style="font-size: 80px;">{{ score }}</h1>
+                   </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            {% comment %} Right Side {% endcomment %}
+            <div class="col-6">
+              <h4> 프레임 추출 :</h4>
+              {% for color in movie.color_set.all %}
+              <img src="{{ color.color_url }}" alt="">
+              {% endfor %}
+
+              <h4> 특정색 추출 Best 5</h4>
+              <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 100%; background-color: red; opacity: 0.5;"
+                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 100%; background-color: skyblue; opacity: 0.5;"
+                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 100%; background-color: orange; opacity: 0.5;"
+                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 100%; background-color: yellow; opacity: 0.5;"
+                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 100%; background-color: green; opacity: 0.5;"
+                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+
+
+            </div>
+          </div>
         </span>
-        <div class="app-card__subtext">{{ movie.overview }}</div>
-        <div class="app-card-buttons">
-          <button class="content-button status-button" onclick="location.href='{% url 'movies:detail' movie.pk %}'"> 이동
-          </button>
-          <div class="menu"></div>
+        
         </div>
       </div>
       {% endfor %}
