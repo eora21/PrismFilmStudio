@@ -39,7 +39,7 @@
       {% comment %} Header {% endcomment %}
       <div class="header">
         <div class="header-menu">
-          <a class="menu-link " href="{% url 'movies:index' %}"
+          <a class="menu-link " href="{% url 'movies:index' 1 %}"
             style="font-size: 20px; color: white; font-weight: bolder;">인공지능을 활용한 색채 기반 영화 추천</a>
         </div>
         <div class="search-bar">
@@ -109,7 +109,15 @@
                 </svg>
                 색채 고르기
               </a>
-              <a href="#">
+              <a href="{% url 'movies:index' 1 %}">
+                <svg viewBox="0 0 511.441 511.441" fill="currentColor">
+                  <path d="M255.721 347.484L90.22 266.751v106.57l165.51 73.503 165.509-73.503V266.742z" />
+                  <path
+                    d="M511.441 189.361L255.721 64.617 0 189.361l255.721 124.744 195.522-95.378v111.032h30V204.092z" />
+                </svg>
+                색체순 정렬
+              </a>
+              <a href="{% url 'movies:index' 2 %}">
                 <svg viewBox="0 0 511.441 511.441" fill="currentColor">
                   <path d="M255.721 347.484L90.22 266.751v106.57l165.51 73.503 165.509-73.503V266.742z" />
                   <path
@@ -117,7 +125,7 @@
                 </svg>
                 평점순 정렬
               </a>
-              <a href="#">
+              <a href="{% url 'movies:index' 3 %}">
                 <svg viewBox="0 0 512 512" fill="currentColor">
                   <path d="M196 151h-75v90h75c24.814 0 45-20.186 45-45s-20.186-45-45-45z" />
                   <path

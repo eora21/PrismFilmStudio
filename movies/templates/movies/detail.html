@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'movies/css/detail.css' %}">
 {% endblock option_import %}
 
-{% block back_URL %} "{% url 'movies:index' %}" {% endblock back_URL %}
+{% block back_URL %} "{% url 'movies:index' 1 %}" {% endblock back_URL %}
 
 {% block content %} 
 <div class="main-container">

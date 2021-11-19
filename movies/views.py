@@ -3,7 +3,7 @@ from .models import Movie, Color, Review, UserColorRecord
 from .forms import ReviewCommentForm, ReviewForm, MovieCommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods, require_safe
-# Create your views here.
+import math
 
 @login_required
 @require_safe
@@ -12,16 +12,64 @@ def choice(request):
 
 @login_required
 # @require_safe
-def index(request):
+def index(request, mode):                                          # mode : Sorted by 2 - TMDB_Grade / 3 - Release Date / 1, 4~ - Coloring
     movies = Movie.objects.all()
     
     # Profile Color Create
     colors = request.user.usercolorrecord_set.all()                # Color List
     last_color = colors[len(colors)-1]                             # Picked Color
     colors = reversed(colors)                                      # Color Sort(Recently)
-        
+    
+    res_movies = []
+    
+    # Order by TMDB_Grade
+    if mode == 2:
+        for movie in movies:
+            score = movie.naver_grade
+            res_movies.append([movie, score])
+    
+    # Order by Release Date
+    elif mode == 3:
+        for movie in movies:
+            score = movie.release_date
+            res_movies.append([movie, score])
+    
+    # Order by Coloring
+    else:
+        last_color_rgb = last_color.color[4:-1].split(", ")            # users R, G, B list
+
+        for movie in movies:
+            movie_color = movie.color_set.all()[0]
+            score = math.sqrt(
+                    math.pow(int(last_color_rgb[0]) - int(movie_color.color_1_R), 2) +\
+                    math.pow(int(last_color_rgb[1]) - int(movie_color.color_1_G), 2) +\
+                    math.pow(int(last_color_rgb[2]) - int(movie_color.color_1_B), 2)
+                ) + \
+            math.sqrt(
+                    math.pow(int(last_color_rgb[0]) - int(movie_color.color_2_R), 2) +\
+                    math.pow(int(last_color_rgb[1]) - int(movie_color.color_2_G), 2) +\
+                    math.pow(int(last_color_rgb[2]) - int(movie_color.color_2_B), 2)
+                ) + \
+            math.sqrt(
+                    math.pow(int(last_color_rgb[0]) - int(movie_color.color_3_R), 2) +\
+                    math.pow(int(last_color_rgb[1]) - int(movie_color.color_3_G), 2) +\
+                    math.pow(int(last_color_rgb[2]) - int(movie_color.color_3_B), 2)
+            ) + \
+            math.sqrt(
+                    math.pow(int(last_color_rgb[0]) - int(movie_color.color_4_R), 2) +\
+                    math.pow(int(last_color_rgb[1]) - int(movie_color.color_4_G), 2) +\
+                    math.pow(int(last_color_rgb[2]) - int(movie_color.color_4_B), 2)
+                ) + \
+            math.sqrt(
+                    math.pow(int(last_color_rgb[0]) - int(movie_color.color_5_R), 2) +\
+                    math.pow(int(last_color_rgb[1]) - int(movie_color.color_5_G), 2) +\
+                    math.pow(int(last_color_rgb[2]) - int(movie_color.color_5_B), 2)
+                )
+            res_movies.append([movie, int(score)])    
+    res_movies.sort(key= lambda x: x[1], reverse=True)
+    
     context = {
-        'movies': movies,
+        'movies': res_movies,
         'last_color': last_color,
         'colors': colors,
     }
