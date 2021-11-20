@@ -5,7 +5,7 @@
   <head>
     <meta charset="UTF-8">
     <title>인공지능을 활용한 색체 기반 영화 추천</title>
-    
+
     {% comment %} Thema StyleSheet {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
@@ -42,6 +42,11 @@
 
     {% comment %} Style Sheet {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    {% comment %} Modal Import {% endcomment %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     {% block option_import %}{% endblock option_import %}
   </head>
@@ -118,7 +123,7 @@
           <div class="side-wrapper">
             <div class="side-title">음성인식</div>
             <div class="side-menu">
-              <a href="#">
+              <a href="#" data-toggle="modal" data-target="#voiceModal">
                 <svg viewBox="0 0 332 332" fill="currentColor">
                   <path
                     d="M282.341 8.283C275.765 2.705 266.211 0 253.103 0c-18.951 0-36.359 5.634-51.756 16.743-14.972 10.794-29.274 28.637-42.482 53.028-4.358 7.993-7.428 11.041-8.973 12.179h-26.255c-10.84 0-19.626 8.786-19.626 19.626 0 8.989 6.077 16.486 14.323 18.809l-.05.165h.589c1.531.385 3.109.651 4.757.651h18.833l-32.688 128.001c-7.208 27.848-10.323 37.782-11.666 41.24-1.445 3.711-3.266 7.062-5.542 10.135-.42-5.39-2.637-10.143-6.508-13.854-4.264-4.079-10.109-6.136-17.364-6.136-8.227 0-15.08 2.433-20.37 7.229-5.416 4.93-8.283 11.193-8.283 18.134 0 5.157 1.701 12.712 9.828 19.348 6.139 4.97 14.845 7.382 26.621 7.382 17.096 0 32.541-4.568 45.891-13.577 13.112-8.845 24.612-22.489 34.166-40.522 9.391-17.678 18.696-45.124 28.427-83.9l18.598-73.479h30.016c10.841 0 19.625-8.785 19.625-19.625s-8.784-19.626-19.625-19.626h-19.628c6.34-21.62 14.175-37.948 23.443-48.578 2.284-2.695 5.246-5.692 8.412-7.678-1.543 3.392-2.325 6.767-2.325 10.055 0 6.164 2.409 11.714 6.909 16.03 4.484 4.336 10.167 6.54 16.888 6.54 7.085 0 13.373-2.667 18.17-7.716 4.76-5.005 7.185-11.633 7.185-19.703.017-9.079-3.554-16.899-10.302-22.618z" />
@@ -160,46 +165,50 @@
         {% comment %} END Profile {% endcomment %}
 
         {% block content %}
-        <div class="main-container">
-          <div class="main-header">
-          </div>
 
-          <div class="content-wrapper">
-
-
-
-            {% for movie in movies %}
-            <div class="content-section mt-3">
-              <div class="app-card">
-                <span>
-                  <svg viewBox="0 0 52 52" style="border: 1px solid #C75DEB">
-                    <g xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M40.824 52H11.176C5.003 52 0 46.997 0 40.824V11.176C0 5.003 5.003 0 11.176 0h29.649C46.997 0 52 5.003 52 11.176v29.649C52 46.997 46.997 52 40.824 52z"
-                        fill="#3a3375" data-original="#3a3375" />
-                      <path
-                        d="M27.44 39H24.2l-2.76-9.04h-8.32L10.48 39H7.36l8.24-28h3.32l8.52 28zm-6.72-12l-3.48-11.36L13.88 27h6.84zM31.48 33.48c0 2.267 1.333 3.399 4 3.399 1.653 0 3.466-.546 5.44-1.64L42 37.6c-2.054 1.254-4.2 1.881-6.44 1.881-4.64 0-6.96-1.946-6.96-5.841v-8.2c0-2.16.673-3.841 2.02-5.04 1.346-1.2 3.126-1.801 5.34-1.801s3.94.594 5.18 1.78c1.24 1.187 1.86 2.834 1.86 4.94V30.8l-11.52.6v2.08zm8.6-5.24v-3.08c0-1.413-.44-2.42-1.32-3.021-.88-.6-1.907-.899-3.08-.899-1.174 0-2.167.359-2.98 1.08-.814.72-1.22 1.773-1.22 3.16v3.199l8.6-.439z"
-                        fill="#e4d1eb" data-original="#e7adfb" />
-                    </g>
-                  </svg>
-                  {{ movie.title }}
-                </span>
-                <div class="app-card__subtext">{{ movie.overview }}</div>
-                <div class="app-card-buttons">
-                  <button class="content-button status-button"
-                    onclick="location.href='{% url 'movies:detail' movie.pk %}'"> 이동 </button>
-                  <div class="menu"></div>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
         {% endblock content %}
       </div>
     </div>
     <div class="overlay-app"></div>
     </div>
+
+    {% comment %} 음성인식 Modal {% endcomment %}
+      <div class="modal" id="voiceModal">
+        <div class="modal-dialog">
+          <div class="modal-content" style="width: 700px; height: 350px; border-radius: 30px; background-color: rgba(255,255,192,0.1); backdrop-filter: blur(10px); box-shadow: 2px 7px 15px 8px rgba(0,0,0,0.3);">
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="row">
+              <div class="col-6">
+                <video src="{% static 'videos/background.mp4'%}" class='w-100' style="border-radius:20%; opacity:0.6;" autoplay loop muted></video>
+              </div>
+
+              <div class="col-6">
+              </div>
+                Contesnts
+              </div>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+              <button type="button" class="btn btn-danger w-50 h-75 d-flex justify-content-center align-items-center" style="opacity: 0.8; border-radius: 20px;">
+                <i class="fas fa-microphone-alt" style="font-size:35px;"></i>
+              </button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+  
+  {% comment %} Bootstrap JS CDN {% endcomment %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+  {% comment %} 음성인식 Modal 소환 {% endcomment %}
+  <script>
+
+  </script>
 
   <!-- Search Event -->
   <script>
