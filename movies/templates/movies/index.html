@@ -9,7 +9,7 @@
   <div class="content-wrapper">
     {% for movie, score in movies %}
     <div class="content-section mt-3">
-      <div class="app-card">
+      <div class="app-card" OnClick="location.href ='{% url 'movies:detail' movie.pk %}'" style="cursor:pointer;">
         <span>
           <div class="row">
           {% comment %} Left Side {% endcomment %}

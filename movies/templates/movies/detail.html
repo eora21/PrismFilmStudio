@@ -20,23 +20,38 @@
           <div class="row">
             {% comment %} Title {% endcomment %}
             <div class="col-3">
-              <img src="{{ movie.poster_url }} " alt="" class="w-100">
+              <img src="{{ movie.poster_url }} " alt="" class="w-100" style="border-radius: 10%">
             </div>
         </span>
         {% comment %} Contents {% endcomment %}
+        {% for color in movie.color_set.all %}
         <div class="col-9">
-          <h1> {{ movie.title }} </h1>
-
+          <div class="row">
+            <div class="col-7">
+              <h1> {{ movie.title }} </h1>
+            </div>
+            <div class="col-5 d-flex justify-content-between align-items-center">
+              <i class="fas fa-square" style="color: rgb({{color.color_1_R}},{{color.color_1_G}},{{color.color_1_B}}); font-size: 70px; opacity: 0.9;"></i>
+              <i class="fas fa-square" style="color: rgb({{color.color_2_R}},{{color.color_2_G}},{{color.color_2_B}}); font-size: 70px; opacity: 0.9;"></i>
+              <i class="fas fa-square" style="color: rgb({{color.color_3_R}},{{color.color_3_G}},{{color.color_3_B}}); font-size: 70px; opacity: 0.9;"></i>
+              <i class="fas fa-square" style="color: rgb({{color.color_4_R}},{{color.color_4_G}},{{color.color_4_B}}); font-size: 70px; opacity: 0.9;"></i>
+              <i class="fas fa-square" style="color: rgb({{color.color_5_R}},{{color.color_5_G}},{{color.color_5_B}}); font-size: 70px; opacity: 0.9;"></i>
+            </div>
+          </div>
           <div class="app-card__subtext">
             {{ movie.overview }}
           </div>
-          <div class="app-card__subtext">
-            <h4>개봉일 : {{ movie.release_date }}</h4>
+          <div style="font-size: 17px; font-weight: 400; line-height: 1.6em; border-bottom: 1px solid var(--border-color); padding: 10px;">
+            <h5>평균 평점 : {{ movie.naver_grade }} 점</h5>
           </div>
-          <div class="app-card__subtext">
-            <h4>평점 : {{ movie.naver_grade }}점</h4>
+          <div style="font-size: 17px; font-weight: 400; line-height: 1.6em; border-bottom: 1px solid var(--border-color); padding: 10px;">
+            <h5>개봉일 : {{ movie.release_date }}</h5>
+          </div>
+          <div class="d-flex justify-content-center align-items-center" style="height:100px;">
+            <img src="{{color.color_url}}" alt="" class="h-75 w-100">
           </div>
         </div>
+        {% endfor %}
       </div>
     </div>
 
