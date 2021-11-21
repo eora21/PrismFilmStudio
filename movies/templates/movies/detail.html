@@ -42,7 +42,7 @@
             {{ movie.overview }}
           </div>
           <div style="font-size: 17px; font-weight: 400; line-height: 1.6em; border-bottom: 1px solid var(--border-color); padding: 10px;">
-            <h5>평균 평점 : {{ movie.naver_grade }} 점</h5>
+            <h5>평균 평점 : {{ movie.naver_grade }} 점 / 유저 평점 : {{ user_grade }} 점</h5>
           </div>
           <div style="font-size: 17px; font-weight: 400; line-height: 1.6em; border-bottom: 1px solid var(--border-color); padding: 10px;">
             <h5>개봉일 : {{ movie.release_date }}</h5>
@@ -193,35 +193,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-</div>
-{% comment %} 음성인식 Modal {% endcomment %}
-<div class="modal" id="voiceModal2">
-  <div class="modal-dialog" style="margin-top:200px; margin-left: 600px;">
-    <div class="modal-content" style="width: 700px; height: 350px; border-radius: 30px; background-color: rgba(255,255,192,0.1); backdrop-filter: blur(10px); box-shadow: 2px 7px 15px 8px rgba(0,0,0,0.3);">
-      
-      <!-- Modal body -->
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-6">
-            <video src="{% static 'videos/background.mp4'%}" class='w-100' style="border-radius:20%; opacity:0.6;" autoplay loop muted></video>
-          </div>
-
-          <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-            <h4 id="voiceText" style="color:white;"> 음성을 기다리고 있어요...</h4>
-            <h4 class="d-none" id="voiceAnswer" style="color: rgb(242, 206, 85); margin-top:30px;"> 알겠어요, 지금 바로 실행할게요.</h4>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Modal footer -->
-      <div class="modal-footer d-flex justify-content-center align-items-center">
-        <button id="voiceBtn" type="button" class="btn btn-danger w-50 h-75 d-flex justify-content-center align-items-center" style="opacity: 0.8; border-radius: 20px;">
-          <i class="fas fa-microphone-alt" style="font-size:35px;"></i>
-        </button>
-      </div>
-      
     </div>
   </div>
 </div>

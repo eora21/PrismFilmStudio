@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Movie, Color, MovieComment, Review, ReviewComment, UserColorRecord
+from .models import Movie, MovieComment, Review, ReviewComment, UserColorRecord
 from .forms import ReviewCommentForm, ReviewForm, MovieCommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods, require_safe
@@ -17,19 +17,40 @@ def index(request, mode):                                          # mode : Sort
     if not request.user.usercolorrecord_set.all():
         return redirect('movies:choice')
     
-    movies = Movie.objects.all()
+    temp_movies = Movie.objects.all()
     
     # Profile Color Create
     colors = request.user.usercolorrecord_set.all()                # Color List
     last_color = colors[len(colors)-1]                             # Picked Color
     colors = reversed(colors)                                      # Color Sort(Recently)
     
+    # Exclude Already Watched Movies
+    movies = []
+    for movie in temp_movies:
+        for comment in movie.comments.all():                       # Exist request.user Comment
+            if request.user == comment.user:
+                break
+        else:
+            for review in movie.reviews.all():                     # Exist request.user Review
+                if request.user == review.user:
+                    break
+            else:
+                movies.append(movie)
+    
     res_movies = []
     
-    # Order by TMDB_Grade
+    # Order by TMDB_Grade + User_Grade
     if mode == 2:
         for movie in movies:
-            score = movie.naver_grade
+            naver_score = movie.naver_grade
+            user_score = 0 
+            for comment in movie.comments.all():
+                user_score += comment.grade
+            if user_score:
+                user_score = round((user_score / movie.comments.all().count()),1) * 2
+                score = (naver_score + user_score) / 2
+            else:
+                score = naver_score
             res_movies.append([movie, score])
     
     # Order by Release Date
@@ -112,10 +133,22 @@ def detail(request, movie_pk):
     last_color = colors[len(colors)-1]                             # Picked Color
     colors = reversed(colors)                                      # Color Sort(Recently)
     
+    # User Grade
+    comments = movie.comments.all()
+    
+    user_grade = 0
+    if comments:
+        for comment in comments:
+            user_grade += comment.grade
+        user_grade = 2*round(user_grade / len(comments),1)
+    else:
+        user_grade = "-"
+        
     context = {
         'movie': movie,
         'colors': colors,
         'last_color': last_color,
+        'user_grade': user_grade,
     }
     return render(request,'movies/detail.html', context)
 
