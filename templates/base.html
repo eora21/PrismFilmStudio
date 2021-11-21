@@ -81,6 +81,21 @@
         {% comment %} User & Login Button {% endcomment %}
         <div class="header-profile d-flex justify-content-center align-items-center">
           <div class="notification d-flex justify-content-center align-items-center">
+
+            {% comment %} User Tier {% endcomment %}
+            {% if user.is_staff %}
+            <img src="https://d2gd6pc034wcta.cloudfront.net/tier/31.svg" alt="" style="width:40px; height:40px; margin-top:3px; margin-right:2px;">
+            {% elif user.point > 200 %}
+            <img src="https://d2gd6pc034wcta.cloudfront.net/tier/25.svg" alt="" style="width:40px; height:40px; margin-top:3px; margin-right:2px;">
+            {% elif user.point > 120 %}
+            <img src="https://d2gd6pc034wcta.cloudfront.net/tier/19.svg" alt="" style="width:40px; height:40px; margin-top:3px; margin-right:2px;">
+            {% elif user.point > 60 %}
+            <img src="https://d2gd6pc034wcta.cloudfront.net/tier/13.svg" alt="" style="width:40px; height:40px; margin-top:3px; margin-right:2px;">
+            {% elif user.point > 20 %}
+            <img src="https://d2gd6pc034wcta.cloudfront.net/tier/7.svg" alt="" style="width:40px; height:40px; margin-top:3px; margin-right:2px;">
+            {% else %}
+            <img src="https://d2gd6pc034wcta.cloudfront.net/tier/1.svg" alt="" style="width:40px; height:40px; margin-top:3px; margin-right:2px;">
+            {% endif %}
             <h3 style="color: white; margin: 10px; opacity: 0.9;">{{ user.username }}</h3>
             <button class="btn btn-white mt-1" onclick="location.href = '{% url 'accounts:logout' %}'"> <i class="fas fa-exchange-alt" style="color: white; font-size: 20px; opacity: 0.9;"></i> </button>
             <button class="btn btn-white mt-1" onclick="location.href = '{% url 'accounts:logout' %}'"> <i class="fas fa-sign-out-alt" style="color: white; font-size: 20px; opacity: 0.9;"></i> </button>
@@ -269,6 +284,8 @@
                 const searchInput = document.querySelector('#searchInput')
                 const searchButton = document.querySelector('#searchButton')
                 searchInput.value = query
+                voiceAnswer.classList.remove('d-none')
+                voiceAnswer.innerText = "알겠어요, 바로 실행할게요."
                 setTimeout(function() {
                   searchButton.click()
                 }, 1000);

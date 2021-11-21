@@ -120,7 +120,7 @@ def detail(request, movie_pk):
     return render(request,'movies/detail.html', context)
 
 @login_required
-@require_http_methods(['GET','POST'])
+@require_POST
 def movie_comment(request, movie_pk):
     movie = Movie.objects.get(pk = movie_pk)
     form = MovieCommentForm(request.POST)
@@ -129,6 +129,8 @@ def movie_comment(request, movie_pk):
         comment.movie = movie
         comment.user = request.user
         comment.save()
+        request.user.point += 10
+        request.user.save()
         return redirect('movies:detail', movie_pk)
     return redirect('movies:detail', movie_pk)
 
@@ -150,6 +152,8 @@ def review_create(request, movie_pk):
             review.movie = movie
             review.user = request.user
             review.save()
+            request.user.point += 30
+            request.user.save()
             return redirect('movies:detail', movie_pk)
     else:
         form = ReviewForm()
@@ -192,6 +196,8 @@ def review_comment(request, review_pk):
             comment.user = request.user
             comment.review = review
             comment.save()
+            request.user.point += 5
+            request.user.save()
             return redirect('movies:review', review_pk)
             
     return redirect('movies:review', review_pk)
@@ -229,6 +235,8 @@ def review_delete(request, movie_pk, review_pk):
     review = Review.objects.get(pk=review_pk)
     if request.user.pk == review.user.pk:
         review.delete()
+        request.user.point -= 30
+        request.user.save()
         return redirect('movies:detail', movie_pk)
     return redirect('movies:detail', movie_pk)
 
@@ -237,6 +245,8 @@ def review_comment_delete(request, review_pk, review_comment_pk):
     review_comment = ReviewComment.objects.get(pk=review_comment_pk)
     if request.user.pk == review_comment.user.pk:
         review_comment.delete()
+        request.user.point -= 5
+        request.user.save()
         return redirect('movies:review', review_pk)
     return redirect('movies:review', review_pk)
 
@@ -245,6 +255,8 @@ def movie_comment_delete(request, comment_pk, movie_pk):
     comment = MovieComment.objects.get(pk=comment_pk)
     if request.user.pk == comment.user.pk:
         comment.delete()
+        request.user.point -= 10
+        request.user.save()
         return redirect('movies:detail', movie_pk)
     return redirect('movies:detail', movie_pk)
 
@@ -255,6 +267,8 @@ def review_update(request,review_pk):
         if request.method == "POST":
             form = ReviewForm(data=request.POST, instance=review)
             if form.is_valid():
+                request.user.point += 3
+                request.user.save()
                 form.save()
                 return redirect('movies:review', review_pk)
         else:
