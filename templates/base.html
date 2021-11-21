@@ -197,7 +197,6 @@
                 <i class="fas fa-microphone-alt" style="font-size:35px;"></i>
               </button>
             </div>
-            
           </div>
         </div>
       </div>
@@ -256,9 +255,6 @@
         })
           .then(function (response) {
             const res = response.data.res // Number for Recognition
-            console.log(typeof(res))
-            console.log(res)
-            console.log(1 <= res <=3)
             if (res != 0 && res <= 3) {
                 // href to Main by Sorting
               voiceAnswer.classList.remove('d-none')

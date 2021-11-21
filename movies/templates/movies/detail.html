@@ -90,8 +90,7 @@
             <hr>
             <hr>
             <input type="text" name="content" style="background: none; margin-left: 20px; width: 400px; color:white;">
-            <button class="btn btn-warning" style="font-weight: 500px; font-size: 20px; margin-left: 5px; width:100px;">
-              등록</button>
+            <button class="btn btn-warning" style="font-weight: 500px; font-size: 20px; margin-left: 5px; width:100px;">등록</button>
             <hr>
             <hr>
           </form>
@@ -144,7 +143,18 @@
             </p>
             {% endif %}
 
+            <div class="d-flex justify-content-between align-items-center">
+            <div>
             <h5 style="display:inline;">{{ comment.content }} </h5>- {{ comment.user}}
+            </div>
+            {% if request.user == comment.user %}
+            <form action="{% url 'movies:movie_comment_delete' comment.pk movie.pk %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-danger" style="font-weight: 250px; font-size: 15px; margin-left: 5px; width:60px;">삭제</button>
+            </form>
+            {% endif %}
+            </div>
+
           </div>
           <hr>
           {% endfor %}
@@ -155,18 +165,24 @@
         <div class="app-card">
           {% comment %} Review {% endcomment %}
           <h2> 리뷰 </h2>
+
           {% comment %} Review Create {% endcomment %}
-          <h4 style="text-align: right;"> <a href="{% url 'movies:review_create' movie.pk %}"> <button
-                class="btn btn-warning" style="font-weight: 500px; font-size: 20px; margin-left: 5px; width:100px;">
-                리뷰쓰기 </button></a></h4>
+          <h4 style="text-align: right;"> <a href="{% url 'movies:review_create' movie.pk %}"> 
+          <button class="btn btn-warning" style="font-weight: 500px; font-size: 20px; margin-left: 5px; width:100px;"> 리뷰쓰기 </button></a></h4>
+
           {% comment %} Review List {% endcomment %}
           {% for review in movie.reviews.all %}
-
           <div OnClick="location.href ='{% url 'movies:review' review.pk %}'" style="cursor:pointer;">
             <div class="app-card__subtext">
-              <h5>
-                <{{ review.title }}>
-              </h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <h5> <{{ review.title }}> </h5>
+                {% if request.user == review.user %}
+                <form action="{% url 'movies:review_delete' movie.pk review.pk %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger" style="font-weight: 250px; font-size: 15px; margin-left: 5px; width:60px;">삭제</button>
+                </form>
+                {% endif %}
+              </div>
               <p>{{ review.content }}</p>
               <p style="text-align: right;">{{ review.user }}</p>
             </div>

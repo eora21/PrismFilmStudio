@@ -1,6 +1,5 @@
-from django.http.request import RAISE_ERROR
 from django.shortcuts import render,redirect
-from .models import Movie, Color, Review, UserColorRecord
+from .models import Movie, Color, MovieComment, Review, ReviewComment, UserColorRecord
 from .forms import ReviewCommentForm, ReviewForm, MovieCommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods, require_safe
@@ -209,7 +208,7 @@ def usercolor_create(request):
 
 def voice_process(request):
     data = request.GET['data']
-    responsable = {"메인": 1, "매인": 1, "색체": 1, "색체": 1, "평점": 2, "최신": 3, "검색": 4, "뒤로":5, "로그": 6}
+    responsable = {"메인": 1, "매인": 1, "색체": 1, "색채": 1, "평점": 2, "최신": 3, "검색": 4, "뒤로":5, "로그": 6}
     res, query = 0, ""
     
     for key, value in responsable.items():
@@ -224,3 +223,44 @@ def voice_process(request):
         'query' : query,
     }
     return JsonResponse(context)
+
+@require_POST
+def review_delete(request, movie_pk, review_pk):
+    review = Review.objects.get(pk=review_pk)
+    if request.user.pk == review.user.pk:
+        review.delete()
+        return redirect('movies:detail', movie_pk)
+    return redirect('movies:detail', movie_pk)
+
+@require_POST
+def review_comment_delete(request, review_pk, review_comment_pk):
+    review_comment = ReviewComment.objects.get(pk=review_comment_pk)
+    if request.user.pk == review_comment.user.pk:
+        review_comment.delete()
+        return redirect('movies:review', review_pk)
+    return redirect('movies:review', review_pk)
+
+@require_POST
+def movie_comment_delete(request, comment_pk, movie_pk):
+    comment = MovieComment.objects.get(pk=comment_pk)
+    if request.user.pk == comment.user.pk:
+        comment.delete()
+        return redirect('movies:detail', movie_pk)
+    return redirect('movies:detail', movie_pk)
+
+@require_http_methods(["GET","POST"])
+def review_update(request,review_pk):
+    review = Review.objects.get(pk=review_pk)
+    if request.user.pk == review.user.pk:
+        if request.method == "POST":
+            form = ReviewForm(data=request.POST, instance=review)
+            if form.is_valid():
+                form.save()
+                return redirect('movies:review', review_pk)
+        else:
+            form = ReviewForm(instance=review)
+        context = {
+            'form': form,
+            'review': review,
+        }
+    return render(request,'movies/review_update.html', context)

@@ -10,7 +10,18 @@
   <div class="content-wrapper">
     <div class="content-section mt-3">
       <div class="app-card mt-3 d-flex">
-        <h3> {{ review.title }} </h3>
+        <div class="d-flex justify-content-between align-items-center">
+          <h3> {{ review.title }} </h3>
+          {% if request.user == review.user %}
+          <div class="d-flex">
+            <button class="btn btn-success" onclick="location.href = '{% url 'movies:review_update' review.pk %}'" style="font-weight: 250px; font-size: 15px; margin-left: 5px; width:60px;">수정</button>
+            <form action="{% url 'movies:review_delete' review.movie.pk review.pk %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-danger" style="font-weight: 250px; font-size: 15px; margin-left: 5px; width:60px;">삭제</button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
         <h5 style="text-align: right;"> {{ review.user }} </h5>
       </div>
     </div>
@@ -28,7 +39,15 @@
           {% for comment in review.comments.all %}
           <div class="d-flex justify-content-between">
             <p> {{ comment.content }} </p>
-            <p> {{ comment.user }} </p>
+            <div>
+            {{ comment.user }} 
+            {% if request.user == comment.user %}
+            <form action="{% url 'movies:review_comment_delete' review.pk comment.pk %}" method="POST" class="d-inline">
+            {% csrf_token %}
+            <button class="btn btn-danger" style="font-weight: 250px; font-size: 15px; margin-left: 5px; width:60px;">삭제</button>
+            </form>
+            {% endif %}
+            </div>
           </div>
           {% endfor %}
         </div>
