@@ -13,8 +13,11 @@ def choice(request):
     return render(request, 'movies/choice.html')
 
 @login_required
-# @require_safe
+@require_safe
 def index(request, mode):                                          # mode : Sorted by 2 - TMDB_Grade / 3 - Release Date / 4 - Search Data / 1, 4~ - Coloring
+    if not request.user.usercolorrecord_set.all():
+        return redirect('movies:choice')
+    
     movies = Movie.objects.all()
     
     # Profile Color Create
@@ -98,8 +101,11 @@ def index(request, mode):                                          # mode : Sort
     return render(request, 'movies/index.html', context)
 
 @login_required
-# @require_safe
+@require_safe
 def detail(request, movie_pk):
+    if not request.user.usercolorrecord_set.all():
+        return redirect('movies:choice')
+    
     movie = Movie.objects.get(id = movie_pk)
     
     # Profile Color Create
