@@ -181,7 +181,7 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-6">
-                  <video src="{% static 'videos/background.mp4'%}" class='w-100' style="border-radius:20%; opacity:0.6;" autoplay loop muted></video>
+                  <video src="{% static 'videos/background.mp4'%}" class='w-100' style="border-radius:20%; opacity:0.8;" autoplay loop muted></video>
                 </div>
 
                 <div class="col-6 d-flex flex-column justify-content-center align-items-center">
@@ -201,6 +201,10 @@
           </div>
         </div>
       </div>
+
+    {% comment %} Frame Expansion Modal{% endcomment %}
+    {% block frame_modal %}
+    {% endblock frame_modal %}
 
   <!-- Search Event -->
   <script>
@@ -301,7 +305,6 @@
       voiceText.innerText = `"${transcript}"`
     })
   </script>
-
-  
+  {% block option_js %} {% endblock option_js %}
   </body>
 </html>
