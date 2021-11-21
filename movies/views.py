@@ -1,9 +1,11 @@
+from django.http.request import RAISE_ERROR
 from django.shortcuts import render,redirect
 from .models import Movie, Color, Review, UserColorRecord
 from .forms import ReviewCommentForm, ReviewForm, MovieCommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods, require_safe
 import math
+from django.http import JsonResponse
 
 @login_required
 @require_safe
@@ -197,3 +199,22 @@ def usercolor_create(request):
         colors[0].delete()
     UserColorRecord.objects.create(user=request.user, color=request.POST['color'])  # Color Push
     return redirect('movies:index', 1)
+
+
+def voice_process(request):
+    data = request.GET['data']
+    responsable = {"메인": 1, "매인": 1, "색체": 1, "색체": 1, "평점": 2, "최신": 3, "검색": 4, "뒤로":5, "로그": 6}
+    res, query = 0, ""
+    
+    for key, value in responsable.items():
+        if key in data:
+            if key == "검색":
+                query = str(data[1:data.index("검색")])
+            res = value
+            break
+        
+    context = {
+        'res' : res,
+        'query' : query,
+    }
+    return JsonResponse(context)

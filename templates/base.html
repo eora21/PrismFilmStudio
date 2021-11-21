@@ -155,7 +155,7 @@
 
               </a>
             
-              <a href={% block back_URL %} {% endblock back_URL %}>
+              <a id="backTag" href={% block back_URL %} {% endblock back_URL %}>
                 <i class="fas fa-undo-alt" style="margin-right: 10px;"></i>
                 뒤로가기
               </a>
@@ -174,25 +174,26 @@
 
     {% comment %} 음성인식 Modal {% endcomment %}
       <div class="modal" id="voiceModal">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="margin-top:200px; margin-left: 600px;">
           <div class="modal-content" style="width: 700px; height: 350px; border-radius: 30px; background-color: rgba(255,255,192,0.1); backdrop-filter: blur(10px); box-shadow: 2px 7px 15px 8px rgba(0,0,0,0.3);">
             
             <!-- Modal body -->
             <div class="modal-body">
               <div class="row">
-              <div class="col-6">
-                <video src="{% static 'videos/background.mp4'%}" class='w-100' style="border-radius:20%; opacity:0.6;" autoplay loop muted></video>
-              </div>
+                <div class="col-6">
+                  <video src="{% static 'videos/background.mp4'%}" class='w-100' style="border-radius:20%; opacity:0.6;" autoplay loop muted></video>
+                </div>
 
-              <div class="col-6">
-              </div>
-                Contesnts
+                <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                  <h4 id="voiceText" style="color:white;"> 음성을 기다리고 있어요...</h4>
+                  <h4 class="d-none" id="voiceAnswer" style="color: rgb(242, 206, 85); margin-top:30px;"> 알겠어요, 지금 바로 실행할게요.</h4>
+                </div>
               </div>
             </div>
             
             <!-- Modal footer -->
             <div class="modal-footer d-flex justify-content-center align-items-center">
-              <button type="button" class="btn btn-danger w-50 h-75 d-flex justify-content-center align-items-center" style="opacity: 0.8; border-radius: 20px;">
+              <button id="voiceBtn" type="button" class="btn btn-danger w-50 h-75 d-flex justify-content-center align-items-center" style="opacity: 0.8; border-radius: 20px;">
                 <i class="fas fa-microphone-alt" style="font-size:35px;"></i>
               </button>
             </div>
@@ -201,25 +202,106 @@
         </div>
       </div>
 
-  
-  {% comment %} Bootstrap JS CDN {% endcomment %}
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-  {% comment %} 음성인식 Modal 소환 {% endcomment %}
-  <script>
-
-  </script>
-
   <!-- Search Event -->
   <script>
-  const searchInput = document.querySelector('#searchInput')
-  const searchButton = document.querySelector('#searchButton')
-
-  searchInput.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-      searchButton.click()
-    }
-  })
+    const searchInput = document.querySelector('#searchInput')
+    const searchButton = document.querySelector('#searchButton')
+  
+    searchInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        searchButton.click()
+      }
+    })
   </script>
+
+  {% comment %} Bootstrap JS CDN {% endcomment %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  
+  {% comment %} 음성인식 {% endcomment %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script>
+    // Required Definition
+    const voiceBtn = document.querySelector('#voiceBtn')
+    const voiceText = document.querySelector('#voiceText')
+    const processURL = '/movies/voice_process/'
+    const voiceAnswer = document.querySelector('#voiceAnswer')
+
+    let speech = new webkitSpeechRecognition // Voice Recording Tool
+    let flag = true // start|stop flag
+
+    voiceBtn.addEventListener('click', function () {
+      if (flag) {
+        speech.start()
+        voiceText.innerText = "듣고 있어요..."
+        voiceBtn.innerHTML = '<i class="fas fa-stop" style="font-size:35px;"></i>'
+        voiceAnswer.classList.add('d-none')
+        flag = false
+      } else {
+        speech.stop()
+        voiceBtn.innerHTML = '<i class="fas fa-microphone-alt" style="font-size:35px;"></i>'
+        flag = true
+        
+        // Connecting to voice_process in View
+        axios({
+          method: 'GET',
+          url: processURL,
+          params: {
+            data: voiceText.textContent,
+          }
+        })
+          .then(function (response) {
+            const res = response.data.res // Number for Recognition
+            console.log(typeof(res))
+            console.log(res)
+            console.log(1 <= res <=3)
+            if (res != 0 && res <= 3) {
+                // href to Main by Sorting
+              voiceAnswer.classList.remove('d-none')
+              voiceAnswer.innerText = "알겠어요, 바로 실행할게요."
+              setTimeout(function() {
+                window.location.href = `/movies/index/${res}`
+              }, 1000);  
+            } else if (res >= 4) {
+              if (res == 4) {
+                // Search
+                let query = response.data.query
+                const searchInput = document.querySelector('#searchInput')
+                const searchButton = document.querySelector('#searchButton')
+                searchInput.value = query
+                setTimeout(function() {
+                  searchButton.click()
+                }, 1000);
+              } else if (res == 5) {
+                // Click BackBtn
+                voiceAnswer.classList.remove('d-none')
+                voiceAnswer.innerText = "알겠어요, 바로 실행할게요."
+                setTimeout(function() {
+                  let backTag = document.querySelector('#backTag')
+                  backTag.click()
+                }, 1000);
+              } else if (res == 6) {
+                // About UserInfo Update
+                voiceAnswer.classList.remove('d-none')
+                voiceAnswer.innerText = "알겠어요, 바로 실행할게요."
+                setTimeout(function() {
+                window.location.href = '/accounts/logout'
+              }, 1000);
+              }
+            } else {
+              voiceAnswer.classList.remove('d-none')
+              voiceAnswer.innerText = "해당 서비스는 준비중입니다."
+            }
+          })
+        }})
+    
+    // Recording Response Tracking
+    speech.addEventListener("result", function (event) {
+      const { transcript } = event["results"][0][0]
+      voiceText.innerText = `"${transcript}"`
+    })
+  </script>
+
+  
   </body>
 </html>

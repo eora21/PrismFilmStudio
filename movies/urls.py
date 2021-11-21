@@ -15,4 +15,6 @@ urlpatterns = [
     path('review_comment/<int:review_pk>', views.review_comment, name="review_comment"),
     
     path('usercolor_create/', views.usercolor_create, name="usercolor_create"),
+    
+    path('voice_process/', views.voice_process, name="voice_process"),
 ]
