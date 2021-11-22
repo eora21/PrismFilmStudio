@@ -18,8 +18,8 @@ urlpatterns = [
     path('review_comment/<int:review_pk>/', views.review_comment, name="review_comment"),
     path('review_comment_delete/<int:review_pk>/<int:review_comment_pk>/', views.review_comment_delete, name="review_comment_delete"),
     
-    
     path('usercolor_create/', views.usercolor_create, name="usercolor_create"),
+    path('usercolor_update/<rgb>/', views.usercolor_update, name="usercolor_update"),
     
-    path('voice_process/', views.voice_process, name="voice_process"),
+    path('voice_process/', views.voice_process, name="voice_process"),    
 ]

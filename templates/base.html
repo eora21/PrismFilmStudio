@@ -127,8 +127,12 @@
             <div class="side-menu">
               {% for color in colors %}
               <div class="progress mt-3">
-                <div class="progress-bar" role="progressbar" style="width: 100%; opacity: 0.6; background-color: {{ color.color }};"
-                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" style="width: 100%; opacity: 0.6; background-color: {{ color.color }};" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  <form action="{% url 'movies:usercolor_update' color.color %}" method="POST">
+                    {% csrf_token %}
+                    <button style="width: 100%; height: 100%; background-color: transparent; background-repeat: no-repeat; border: none; cursor: pointer; overflow: hidden; outline: none;"></button>
+                  </form>
+                </div>
               </div>
               {% endfor %}
             </div>

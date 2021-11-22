@@ -271,6 +271,15 @@ def usercolor_create(request):
     UserColorRecord.objects.create(user=request.user, color=request.POST['color'])  # Color Push
     return redirect('movies:index', 1)
 
+@require_POST
+def usercolor_update(request, rgb):
+    colors = request.user.usercolorrecord_set.all()
+    for i in range(len(colors)):
+        if colors[i].color == rgb:
+            colors[i].delete()
+            break
+    UserColorRecord.objects.create(user=request.user, color=rgb)  # Color Push
+    return redirect('movies:index', 1)
 
 def voice_process(request):
     data = request.GET['data']
@@ -338,3 +347,4 @@ def review_update(request,review_pk):
             'review': review,
         }
     return render(request,'movies/review_update.html', context)
+
