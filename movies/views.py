@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods, require_safe
 import math
 from django.http import JsonResponse
+from django.db.models import Count
 
 @login_required
 @require_safe
@@ -17,7 +18,7 @@ def index(request, mode):                                          # mode : Sort
     if not request.user.usercolorrecord_set.all():
         return redirect('movies:choice')
     
-    temp_movies = Movie.objects.all()
+    movies = Movie.objects.all()
     
     # Profile Color Create
     colors = request.user.usercolorrecord_set.all()                # Color List
@@ -25,17 +26,36 @@ def index(request, mode):                                          # mode : Sort
     colors = reversed(colors)                                      # Color Sort(Recently)
     
     # Exclude Already Watched Movies
-    movies = []
-    for movie in temp_movies:
-        for comment in movie.comments.all():                       # Exist request.user Comment
-            if request.user == comment.user:
-                break
-        else:
-            for review in movie.reviews.all():                     # Exist request.user Review
-                if request.user == review.user:
-                    break
-            else:
-                movies.append(movie)
+    # temp_movies = Movie.objects.all()
+    # movies = []
+    # for movie in temp_movies:
+    #     for comment in movie.comments.all():                       # Exist request.user Comment
+    #         if request.user == comment.user:
+    #             break
+    #     else:
+    #         for review in movie.reviews.all():                     # Exist request.user Review
+    #             if request.user == review.user:
+    #                 break
+    #         else:
+    #             movies.append(movie)
+    
+    # res_movies = []
+    
+    # Exclude Already Watched Movies(Query Optimization)
+    already_watched_movies = set()
+
+    users_moviecomments = MovieComment.objects.filter(user=request.user.pk).values('movie')
+    for users_moviecomment in users_moviecomments:
+        already_watched_movies.add(users_moviecomment['movie'])
+
+    users_reviews = Review.objects.filter(user=request.user.pk).values('movie')
+    for users_review in users_reviews:
+        already_watched_movies.add(users_review['movie'])
+
+    # Query Optimization - movie.color_set + Exclude Already Watched Movies + movie.comments_set + movie.comments.all.count()
+    movies = Movie.objects.prefetch_related('color_set','comments')\
+            .annotate(comment_count=Count('comments'))\
+            .exclude(id__in=already_watched_movies)
     
     res_movies = []
     
@@ -47,7 +67,7 @@ def index(request, mode):                                          # mode : Sort
             for comment in movie.comments.all():
                 user_score += comment.grade
             if user_score:
-                user_score = round((user_score / movie.comments.all().count()),1) * 2
+                user_score = round((user_score / movie.comment_count),1) * 2
                 score = (naver_score + user_score) / 2
             else:
                 score = naver_score
@@ -143,12 +163,19 @@ def detail(request, movie_pk):
         user_grade = 2*round(user_grade / len(comments),1)
     else:
         user_grade = "-"
-        
+    
+    # Comments
+    comments = MovieComment.objects.select_related('user').filter(movie = movie)
+    # Review Optimization
+    reviews = Review.objects.select_related('user').filter(movie = movie)
+    
     context = {
         'movie': movie,
         'colors': colors,
         'last_color': last_color,
         'user_grade': user_grade,
+        'reviews': reviews,
+        'comments': comments,
     }
     return render(request,'movies/detail.html', context)
 
