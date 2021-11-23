@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block back_URL %} "{% url 'movies:choice' %}" {% endblock back_URL %}
 
@@ -62,7 +63,12 @@
             <div class="col-6" style="height: 400px;">
               <div class="h-50">
                 <div class="side-title"> 프레임 클러스터링 </div>
-                <img src="{{ color.color_url }}" alt="" class="h-75">
+                  {% comment %} Image from Static {% endcomment %}
+                  {% with movie.pk|stringformat:"i" as moviepk %}
+                  {% with 'movies/images/'|add:moviepk|add:'.png' as image_static %}
+                  <img src="{% static image_static %}" alt="" class="h-75">
+                  {% endwith %}
+                  {% endwith %}
               </div>
 
               <div class="h-50 mt-3">
