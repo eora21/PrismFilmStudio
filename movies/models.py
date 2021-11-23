@@ -10,7 +10,8 @@ class Movie(models.Model):
     naver_grade = models.FloatField(null=True)
     user_grade = models.IntegerField(null=True)
     release_date = models.TextField()
-    
+    trailer_url = models.TextField(null=True)
+
     def __str__(self):
         return self.title
 

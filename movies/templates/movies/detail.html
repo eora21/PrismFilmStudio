@@ -20,7 +20,10 @@
           <div class="row">
             {% comment %} Title {% endcomment %}
             <div class="col-3">
-              <img src="{{ movie.poster_url }} " alt="" class="w-100" style="border-radius: 10%">
+              <div class="d-flex justify-content-center align-items-center h-100 w-100 " style="position:relative;" data-toggle="modal" data-target="#trailerModal">
+              <img src="{{ movie.poster_url }} " alt="" class="h-100" style="border-radius: 10%; position:absolute;">
+              <i class="far fa-play-circle" style="font-size:120px; z-index:100;"></i>
+              </div>
             </div>
         </span>
         {% comment %} Contents {% endcomment %}
@@ -47,7 +50,7 @@
           <div style="font-size: 17px; font-weight: 400; line-height: 1.6em; border-bottom: 1px solid var(--border-color); padding: 10px;">
             <h5>개봉일 : {{ movie.release_date }}</h5>
           </div>
-          <div class="d-flex justify-content-center align-items-center" style="height:100px;" data-toggle="modal" data-target="#imagemodal">
+          <div class="d-flex justify-content-center align-items-center" style="height:100px;" data-toggle="modal" data-target="#imageModal">
             {% comment %} Image from Static {% endcomment %}
             {% with movie.pk|stringformat:"i" as moviepk %}
             {% with 'movies/images/'|add:moviepk|add:'.png' as image_static %}
@@ -203,29 +206,48 @@
 </div>
 {% endblock content %}
 
-{% comment %} Frame Expansion Modal{% endcomment %}
-{% block frame_modal %}
-<div class="modal" id="imagemodal">
+{% block option_modal %}
+<!-- Frame Expansion Modal -->
+<div class="modal" id="imageModal" tabindex="-1">
   <div class="modal-dialog" style="max-width: 60%; margin-top: 300px;">
-    <div class="modal-content" style="border-radius: 30px; background-color: rgba(255,255,192,0.1); backdrop-filter: blur(10px); box-shadow: 2px 7px 15px 8px rgba(0,0,0,0.3);">
-      
-      <!-- Modal body -->
-      <div class="modal-body">
-        <img src="" alt="">
-      
+    <div class="modal-content" class="modal-content" style="border-radius: 30px; background-color: rgba(255,255,192,0.1); backdrop-filter: blur(10px); box-shadow: 2px 7px 15px 8px rgba(0,0,0,0.3);">
+      <div class="modal-frame-body">
+        <img src="" alt="" id="frameImg" style="padding:16px;">
+      </div>
     </div>
   </div>
 </div>
-{% endblock frame_modal %}
+
+<!-- Trailer Modal -->
+<div class="modal" id="trailerModal" tabindex="-1">
+  <div class="modal-dialog " style="max-width: 60%;">
+    <div class="modal-content" class="modal-content" style="border-radius: 30px; background-color: rgba(255,255,192,0.1); backdrop-filter: blur(10px); box-shadow: 2px 7px 15px 8px rgba(0,0,0,0.3);">
+      <div class="modal-trailer-body" style="width: 100%; height:700px; border-radius:20%;">
+        <iframe src="https://www.youtube.com/embed/{{movie.trailer_url}}?autoplay=1&mute=1" frameborder="0" width="100%" height="100%" style="padding:16px;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock option_modal %}
 
 {% block option_js %}
+  {% comment %} Frame Expansion Script {% endcomment %}
   <script>
     const color_url = document.querySelector('#color_url')
     const src = color_url.getAttribute('src')
     const imagemodal = document.querySelector('#imagemodal')
-    const color_barcode = imagemodal.querySelector('.modal-body img')
+    const color_barcode = document.querySelector('#frameImg')
     color_url.addEventListener('click', function(event) {
       color_barcode.src = src
+    })
+  </script>
+  
+  {% comment %} Trailer Script {% endcomment %}
+  <script>
+    let trailerModal = document.querySelector('#trailerModal')
+    let iframe = document.querySelector('iframe')
+    window.addEventListener('click', function (){
+      iframe.setAttribute("src",iframe.getAttribute("src"))
     })
   </script>
 {% endblock option_js %}
