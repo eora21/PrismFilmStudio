@@ -10,7 +10,7 @@ class MovieCommentForm(ModelForm):
 class ReviewForm(ModelForm):
     class Meta:
         model = Review
-        fields = ('title','content')
+        fields = ('title','content','draw')
         
 class ReviewCommentForm(ModelForm):
     class Meta:

@@ -183,7 +183,7 @@
           <div OnClick="location.href ='{% url 'movies:review' review.pk %}'" style="cursor:pointer;">
             <div class="app-card__subtext">
               <div class="d-flex justify-content-between align-items-center">
-                <h5> <{{ review.title }}> </h5>
+                <h3> <{{ review.title }}> </h5>
                 {% if request.user == review.user %}
                 <form action="{% url 'movies:review_delete' movie.pk review.pk %}" method="POST">
                 {% csrf_token %}
@@ -191,8 +191,13 @@
                 </form>
                 {% endif %}
               </div>
-              <p>{{ review.content }}</p>
+              <h5>{{ review.content }}</h5>
               <p style="text-align: right;">{{ review.user }}</p>
+              <div>
+              {% if review.draw %}
+              <img src="{{review.draw.url}}" alt="" style="height:250px; border-radius:10%; opacity: 0.8;">
+              {% endif %}
+              </div>
             </div>
           </div>
           <hr>

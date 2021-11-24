@@ -206,7 +206,7 @@ def review_create(request, movie_pk):
     colors = reversed(colors)                                      # Color Sort(Recently)
     
     if request.method == "POST":
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST, request.FILES)
         if form.is_valid():
             review = form.save(commit=False)
             review.movie = movie
