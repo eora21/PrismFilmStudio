@@ -1,11 +1,13 @@
 from django.shortcuts import render,redirect
-from .models import Movie, MovieComment, Review, ReviewComment, UserColorRecord
-from .forms import ReviewCommentForm, ReviewForm, MovieCommentForm
+from .models import Movie, MovieComment, Review, ReviewComment, UserColorRecord, Quiz
+from .forms import ReviewCommentForm, ReviewForm, MovieCommentForm, QuizForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods, require_safe
 import math
 from django.http import JsonResponse
 from django.db.models import Count
+import json
+import random
 
 @login_required
 @require_safe
@@ -348,3 +350,105 @@ def review_update(request,review_pk):
         }
     return render(request,'movies/review_update.html', context)
 
+@login_required
+@require_http_methods(['GET','POST'])
+def quiz_create(request):
+    # Profile Color Create
+    colors = request.user.usercolorrecord_set.all()                # Color List
+    last_color = colors[len(colors)-1]                             # Picked Color
+    colors = reversed(colors)                                      # Color Sort(Recently)
+    
+    movies = Movie.objects.all()
+    
+    if request.method == "POST":
+        form = QuizForm(request.POST, request.FILES)
+        if form.is_valid():
+            quiz = form.save(commit=False)
+            quiz.user = request.user
+            quiz.save()
+            request.user.point += 30
+            request.user.save()
+            return redirect('movies:index', 2)
+    else:
+        form = QuizForm()
+    context = {
+        'form': form,
+        'last_color': last_color,
+        'colors': colors,
+        'movies': movies,
+    }
+    return render(request, 'movies/quiz_create.html', context)
+
+@login_required
+@require_http_methods(['GET','POST'])
+def quiz(request):
+    quizs = Quiz.objects.all()
+    point = request.user.point
+    
+    required_point = 0
+    if request.user.is_staff or point > 201:
+        pass
+    elif point > 120:
+        required_point = 201 - point
+    elif point > 60:
+        required_point = 121 - point
+    elif point > 20:
+        required_point = 61 - point
+    else:
+        required_point = 21 - point
+        
+    if request.method == "POST":
+        form = QuizForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        pass
+    
+    movies = Movie.objects.all()
+    movies_ints = [i for i in range(6,106)]
+    
+    quizs_list = []
+    for i in quizs:
+        examples = random.sample(movies_ints,4)                    # Random for 1 Quiz
+        ran_num = random.choice([1,2,3,4,5,6])
+        examples.insert(ran_num,200)
+        
+        temps = []
+        for x in examples:
+            if x == 200:
+                temps.append(i)
+            else:
+                temps.append(movies[x-6])
+        quizs_list.append([i,temps])
+        
+    context = {
+        'quizs_list': quizs_list,
+        'required_point': required_point,
+    }
+    
+    return render(request,'movies/quiz.html',context)
+
+@login_required
+@require_http_methods(['GET','POST'])
+def quiz_check(request):
+    post_body = json.loads(request.body.decode('utf-8'))
+    
+    question_pk = post_body.get('question_pk')
+    answer = post_body.get('answer')
+
+    quiz = Quiz.objects.get(pk=question_pk)
+    correct = False
+
+    if int(quiz.movie.pk) == int(answer):
+        print("정답")
+        correct = True
+        
+        request.user.point += 20
+        quiz.correct_user.add(request.user)
+        request.user.save()
+
+    context = {
+        "correct": correct,
+    }
+
+    return JsonResponse(context)

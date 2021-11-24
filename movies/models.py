@@ -66,3 +66,9 @@ class ReviewComment(models.Model):
 class UserColorRecord(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     color = models.CharField(max_length=50)
+    
+class Quiz(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=13)
+    draw = models.ImageField(blank=True, upload_to='images/')
+    correct_user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="corrected_quizs")

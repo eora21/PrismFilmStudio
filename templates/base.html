@@ -81,7 +81,7 @@
         {% comment %} User & Login Button {% endcomment %}
         <div class="header-profile d-flex justify-content-center align-items-center">
           <div class="notification d-flex justify-content-center align-items-center">
-
+            <a href="{% url 'movies:quiz' %}" class="btn btn-warning mx-2">티어 올리기</a>
             {% comment %} User Tier {% endcomment %}
             {% if user.is_staff %}
             <img src="https://d2gd6pc034wcta.cloudfront.net/tier/31.svg" alt="" style="width:40px; height:40px; margin-top:3px; margin-right:2px;">

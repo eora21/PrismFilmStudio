@@ -22,4 +22,8 @@ urlpatterns = [
     path('usercolor_update/<rgb>/', views.usercolor_update, name="usercolor_update"),
     
     path('voice_process/', views.voice_process, name="voice_process"),    
+    
+    path('quiz_create/', views.quiz_create, name="quiz_create"),
+    path('quiz/', views.quiz, name="quiz"),
+    path('quiz_check/', views.quiz_check, name="quiz_check"),
 ]
