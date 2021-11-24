@@ -125,11 +125,9 @@ function onMouseMove(evnet){
     const x = event.offsetX;
     const y = event.offsetY;
     if(!painting){
-        console.log("현 위치 감지 : ", x, y);
         ctx.beginPath();
         ctx.moveTo(x,y);
     } else {
-        console.log("현 위치부터 라인그리기 ", x, y);
         ctx.lineTo(x,y);
         ctx.stroke();
     }
@@ -137,13 +135,11 @@ function onMouseMove(evnet){
 
 function handleColorClick(event){
     const color = event.target.style.backgroundColor;
-    console.log(color);
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
 }
 
 function handleRangeChange(event){
-    console.log(event.target.value);
     const size = event.target.value;
     ctx.lineWidth = size;
 }
@@ -179,8 +175,6 @@ if(canvas){
   canvas.addEventListener("click", handleCanvasClick);
   canvas.addEventListener("contextmenu", handleCM);
 }
-
-console.log(Array.from(colors));
 
 Array.from(colors).forEach(color => 
   color.addEventListener("click", handleColorClick)

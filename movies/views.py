@@ -440,7 +440,6 @@ def quiz_check(request):
     correct = False
 
     if int(quiz.movie.pk) == int(answer):
-        print("정답")
         correct = True
         
         request.user.point += 20
