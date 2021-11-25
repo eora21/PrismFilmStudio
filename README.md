@@ -373,7 +373,7 @@ MessageBox.Show("이미지 추출 완료");
 
 
 
-![Image Pasted at 2021-11-17 13-52](README.assets/Image Pasted at 2021-11-17 13-52.png)
+![Image Pasted at 2021-11-17 13-52](README.assets/bacord5.png)
 
 예고편에서 뽑아낸 프레임들의 대표색을 기록한 한 장의 이미지(앞으로 이러한 이미지를 컬러바코드라 칭하겠다).
 
