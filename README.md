@@ -54,8 +54,8 @@
 |                       [**FE**]()                       |  HTML / CSS / JavaScript  |            Django 3.2.9 / HTML5 / CSS3 / ES6             |
 |         [**클러스터링**](#색채-데이터-만들기)          |  C# .Net Framework 4.7.2  |            C#(OpenCvSharp4 - V4.5.3.20210817)            |
 | [**RGB Calculating**](#알고리즘-구성-및-웹페이지-작업) |       Python 3.9.6        |                       Python(Math)                       |
-|                     [**DB**](#DB)                      |       Python 3.9.6        |                    Python(Shell_plus)                    |
-|           [**Query 최적화**](#Query-최적화)            |       Django 3.2.9        |      prefetch_related / annotate / filter / exclude      |
+|                     [**DB**](#db)                      |       Python 3.9.6        |                    Python(Shell_plus)                    |
+|           [**Query 최적화**](#query-최적화)            |       Django 3.2.9        |      prefetch_related / annotate / filter / exclude      |
 |                   [**배포**](#배포)                    |            AWS            | EC2(Ubuntu Server 18.04 LTS) / Cloud9 / Gunicorn / NGINX |
 
 
