@@ -385,6 +385,11 @@ def quiz(request):
     quizs = Quiz.objects.all()
     point = request.user.point
     
+    # Profile Color Create
+    colors = request.user.usercolorrecord_set.all()                # Color List
+    last_color = colors[len(colors)-1]                             # Picked Color
+    colors = reversed(colors)                                      # Color Sort(Recently)
+    
     required_point = 0
     if request.user.is_staff or point > 201:
         pass
@@ -422,6 +427,8 @@ def quiz(request):
         quizs_list.append([i,temps])
         
     context = {
+        'colors': colors,
+        'last_color': last_color,
         'quizs_list': quizs_list,
         'required_point': required_point,
     }
