@@ -1461,7 +1461,7 @@ Base -  https://edu.ssafy.com
 
 대표 색채 - https://airows.com/culture/color-palettes-from-famous-movie-scenes
 
-티어 시스템 - https://www.acmicpc.net/`, `https://solved.ac/
+티어 시스템 - https://www.acmicpc.net/, https://solved.ac/
 
 
 
